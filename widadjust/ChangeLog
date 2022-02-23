@@ -1,0 +1,10 @@
+0.00-beta-057: add more options to settings, allow larger error with setTime
+0.00-beta-056: add `WIDGETS.adjust.now()`
+0.00-beta-053: delay initial clock check 10 seconds to make setTime succeed more often
+0.00-beta-050: check clock error when widget starts ; internal tweaking
+0.00-beta-047: add 'Save State' setting
+0.00-beta-030: simpler menu for PPM, without submenus
+0.00-beta-026: add 'Retry Interval' setting and improve README
+0.00-beta-021: skip setTime if delay is too inaccurate
+0.00-beta-018: use 'Update interval' setting instead of fixed value
+0.00-beta-014: first public version
