@@ -8,7 +8,6 @@
 
   const DEFAULT_ADJUST_THRESHOLD = 100;
   const DEFAULT_UPDATE_INTERVAL  = 60 * 1000;
-  const DEFAULT_RETRY_INTERVAL   = 60 * 1000;
   const MIN_INTERVAL             = 10 * 1000;
 
   const CLOCK_CHECK_DELAY_AT_WIDGET_START = 10 * 1000;
@@ -108,7 +107,6 @@
       ppm2: 0,
       adjustThreshold: DEFAULT_ADJUST_THRESHOLD,
       updateInterval: DEFAULT_UPDATE_INTERVAL,
-      retryInterval: DEFAULT_RETRY_INTERVAL,
     }, require('Storage').readJSON(SETTINGS_FILE, true) || {});
 
     if (settings.debugLog) {
@@ -120,7 +118,6 @@
     }
 
     settings.updateInterval = Math.max(settings.updateInterval, MIN_INTERVAL);
-    settings.retryInterval = Math.max(settings.retryInterval, MIN_INTERVAL);
   }
 
   function onQuit() {
@@ -221,7 +218,8 @@
             ') = (' + estimatedNewClockError.toFixed(2) + ')'
           );
 
-          scheduleClockCheck(settings.retryInterval);
+          // Retry with shorter interval
+          scheduleClockCheck(Math.max(settings.updateInterval / 4, MIN_INTERVAL));
         }
 
         WIDGETS.adjust.draw();

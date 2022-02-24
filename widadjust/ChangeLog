@@ -1,3 +1,4 @@
+0.00-beta-059: remove 'Retry Interval' setting, always use 'Update interval / 4'
 0.00-beta-057: add more options to settings, allow larger error with setTime
 0.00-beta-056: add `WIDGETS.adjust.now()`
 0.00-beta-053: delay initial clock check 10 seconds to make setTime succeed more often
