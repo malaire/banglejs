@@ -210,15 +210,15 @@
           clockError -= adjustment;
 
           debug(
-            new Date(beforeSetTime).toISOString() + ' ; ' +
+            new Date(beforeSetTime).toISOString() + ' SET TIME ' +
             prevClockError.toFixed(2) + ' - ' + adjustment.toFixed(2) + ' = ' +
             clockError.toFixed(2) + ' (' + estimatedNewClockError.toFixed(2) + ')'
           );
         } else {
           debug(
-            new Date(beforeEstimate).toISOString() + ' ; ' +
-            clockError.toFixed(2) + ' - ' + (beforeEstimate - newTime * 1000).toFixed(2) +
-            ' = --.-- (' + estimatedNewClockError.toFixed(2) + ') SKIPPED'
+            new Date(beforeEstimate).toISOString() + ' SKIPPED  ' +
+            clockError.toFixed(2) + ' - (' + (beforeEstimate - newTime * 1000).toFixed(2) +
+            ') = (' + estimatedNewClockError.toFixed(2) + ')'
           );
 
           scheduleClockCheck(settings.retryInterval);
