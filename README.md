@@ -1,6 +1,6 @@
 # banglejs
 
-Some code for Bangle.js 2 smartwatch.
+Some code for Bangle.js 1 & 2 smartwatches.
 
 Beta versions of my apps/widgets are sometimes available at [my app loader]
 before being added to [official app loader].
