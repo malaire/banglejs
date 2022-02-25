@@ -1,7 +1,7 @@
 {
   "id": "widadjust",
   "name": "Adjust Clock",
-  "version": "0.00-beta-060",
+  "version": "0.00-beta-065",
   "description": "Adjusts clock continually in the background to counter clock drift",
   "type": "widget",
   "tags": "widget",

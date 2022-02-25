@@ -1,3 +1,4 @@
+0.00-beta-065: don't use delay with `setTime` as it's actually really accurate
 0.00-beta-060: supports also Bangle.js 1
 0.00-beta-059: remove 'Retry Interval' setting, always use 'Update interval / 4'
 0.00-beta-057: add more options to settings, allow larger error with setTime
