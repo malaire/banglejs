@@ -179,10 +179,14 @@
     lastPpm = ppm;
 
     if (Math.abs(clockError) >= settings.adjustThreshold) {
+      let now = Date.now();
       // Shorter variables are faster to look up and this part is time sensitive.
       let e = clockError / 1000;
       setTime(getTime() - e);
-      debug(new Date().toISOString() + ' SET TIME (' + clockError.toFixed(2) + ')');
+      debug(
+        new Date(now).toISOString() + ' -> ' + ((now / 1000 - e) % 60).toFixed(3) +
+        ' SET TIME (' + clockError.toFixed(2) + ')'
+      );
       clockError = 0;
     }
 
