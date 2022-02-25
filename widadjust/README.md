@@ -20,8 +20,12 @@ See **Basic logic** below for more details.
 - **PPM x 0.1** - change PPM in steps of 0.1
 - **Update Interval** - How often to update widget and clock error.
 - **Threshold** - Threshold for adjusting clock.
-  When clock error exceeds this threshold, clock update is attempted.
-- **Save State** - If `On` clock error state is saved to file when widget exists, if needed.
+  When clock error exceeds this threshold, clock is adjusted with `setTime`.
+- **Save State** - If `On` clock error state is saved to file when widget exits, if needed.
+  That is recommended and default setting.
+  If `Off` clock error state is forgotten and reset to 0 whenever widget is restarted,
+  for example when going to Launcher. This can cause significant inaccuracy especially
+  with large **Update Interval** or **Threshold**.
 - **Debug Log** - If `On` some debug information is logged to file `widadjust.log`.
 
 ## Display
@@ -30,15 +34,11 @@ Widget shows clock error in milliseconds and PPM.
 
 ## Basic logic
 
-- Internal clock error counter is updated periodically (**Update Interval**)
-  according to **PPM**.
-- If clock error exceeds **Threshold** then clock is updated with `setTime`.
-
-Whenever this widget is restarted (e.g. when going to Launcher)
-current clock error progress is by default forgotten and reset to 0.
-This can cause significant inaccuracy especially with large **Update Interval** or **Threshold**.
-If **Save State** is enabled then clock error progress is saved to file as needed
-so that it is not forgotten when widget is restarted.
+- When widget starts, clock error state is loaded from file `widadjust.state`.
+- While widget is running, widget display and clock error is updated
+  periodically (**Update Interval**) according to **PPM**.
+- When clock error exceeds **Threshold** clock is adjusted with `setTime`.
+- When widget exists, clock error state is saved to file `widadjust.state` if needed.
 
 ## Services
 
