@@ -13,7 +13,7 @@
 
   let settings = Object.assign({
     advanced: false,
-    saveState: false,
+    saveState: true,
     debugLog: false,
     ppm: 0,
     adjustThreshold: DEFAULT_ADJUST_THRESHOLD,

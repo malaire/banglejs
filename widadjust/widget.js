@@ -98,7 +98,7 @@
   function loadSettings() {
     settings = Object.assign({
       advanced: false,
-      saveState: false,
+      saveState: true,
       debugLog: false,
       ppm: 0,
       ppm0: 0,
