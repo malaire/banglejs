@@ -25,7 +25,6 @@
   let settings;
   let saved;
 
-  let clockCheckTimeout = null;
   let lastClockCheckTime = Date.now();;
   let lastClockErrorUpdateTime;
 
@@ -44,7 +43,8 @@
     lastClockCheckTime = now;
 
     let prevUpdateInterval = currentUpdateInterval;
-    scheduleClockCheck(settings.updateInterval);
+    currentUpdateInterval = settings.updateInterval;
+    setTimeout(clockCheck, lastClockCheckTime + currentUpdateInterval - Date.now());
 
     // If elapsed time differs a lot from expected,
     // some other app probably used setTime to change clock significantly.
@@ -168,17 +168,6 @@
         ppm: Math.round(ppm * 1000) / 1000,
       });
     }
-  }
-
-  function scheduleClockCheck(updateInterval) {
-    if (clockCheckTimeout) clearTimeout(clockCheckTimeout);
-
-    currentUpdateInterval = updateInterval;
-
-    clockCheckTimeout = setTimeout(() => {
-      clockCheckTimeout = null;
-      clockCheck();
-    }, lastClockCheckTime + updateInterval - Date.now());
   }
 
   function updateClockError(ppm) {
