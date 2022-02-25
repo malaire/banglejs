@@ -32,14 +32,7 @@ Widget shows clock error in milliseconds and PPM.
 
 - Internal clock error counter is updated periodically (**Update Interval**)
   according to **PPM**.
-- If clock error exceeds **Threshold** then clock update is attempted.
-- `setTime` can only set time to full seconds. To set time more accurately
-  a short delay is done until next full second, and then `setTime` is used.
-- Sometimes this delay can be longer than intented, e.g. if watch is
-  busy doing something else. In this case `setTime` after too long delay
-  would be inaccurate and so it is skipped and retried again later.
-- After skipped `setTime` the next widget update (and new clock update attempt)
-  is done using **Update Interval / 4** instead of normal **Update Interval**.
+- If clock error exceeds **Threshold** then clock is updated with `setTime`.
 
 Whenever this widget is restarted (e.g. when going to Launcher)
 current clock error progress is by default forgotten and reset to 0.

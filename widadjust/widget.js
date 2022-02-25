@@ -10,7 +10,6 @@
   const DEFAULT_UPDATE_INTERVAL  = 60 * 1000;
   const MIN_INTERVAL             = 10 * 1000;
 
-  const CLOCK_CHECK_DELAY_AT_WIDGET_START = 10 * 1000;
   const MAX_CLOCK_ERROR_FROM_SAVED_STATE  = 2000;
 
   const SAVE_STATE_CLOCK_ERROR_DELTA_THRESHOLD        = 1;
@@ -191,44 +190,14 @@
     lastPpm = ppm;
 
     if (Math.abs(clockError) >= settings.adjustThreshold) {
-      let adjustedTime = Date.now() - clockError;
-      let delay = 1000 - (adjustedTime % 1000);
-      setTimeout(() => {
-        let newTime = (adjustedTime + delay) / 1000;
-        let beforeEstimate = Date.now();
-        // Tweak a bit, value 1.5 has been determined manually.
-        let estimatedNewClockError = clockError - (beforeEstimate - newTime * 1000) - 1.5;
-
-        if (Math.abs(estimatedNewClockError) <= settings.adjustThreshold / 2) {
-          let beforeSetTime = Date.now();
-          setTime(newTime);
-          let adjustment = beforeSetTime - newTime * 1000;
-          let prevClockError = clockError;
-          clockError -= adjustment;
-
-          debug(
-            new Date(beforeSetTime).toISOString() + ' SET TIME ' +
-            prevClockError.toFixed(2) + ' - ' + adjustment.toFixed(2) + ' = ' +
-            clockError.toFixed(2) + ' (' + estimatedNewClockError.toFixed(2) + ')'
-          );
-        } else {
-          debug(
-            new Date(beforeEstimate).toISOString() + ' SKIPPED  ' +
-            clockError.toFixed(2) + ' - (' + (beforeEstimate - newTime * 1000).toFixed(2) +
-            ') = (' + estimatedNewClockError.toFixed(2) + ')'
-          );
-
-          // Retry with shorter interval
-          scheduleClockCheck(Math.max(settings.updateInterval / 4, MIN_INTERVAL));
-        }
-
-        WIDGETS.adjust.draw();
-
-        // Tweak a bit, value 8.0 has been determined manually.
-      }, delay - 8.0);
-    } else {
-      WIDGETS.adjust.draw();
+      // Shorter variables are faster to look up and this part is time sensitive.
+      let e = clockError / 1000;
+      setTime(getTime() - e);
+      debug(new Date().toISOString() + ' SET TIME (' + clockError.toFixed(2) + ')');
+      clockError = 0;
     }
+
+    WIDGETS.adjust.draw();
   }
 
   // ======================================================================
@@ -275,7 +244,7 @@
     }
   }
 
-  scheduleClockCheck(CLOCK_CHECK_DELAY_AT_WIDGET_START);
+  clockCheck();
 
   E.on('kill', onQuit);
 
