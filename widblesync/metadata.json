@@ -1,0 +1,17 @@
+{
+  "id": "widblesync",
+  "name": "BLE Clock Sync",
+  "version": "0.00.009",
+  "description": "Syncs clock via Bluetooth LE, requires [my broadcaster](https://github.com/malaire/ble-current-time-broadcast).",
+  "type": "widget",
+  "tags": "widget",
+  "supports": [ "BANGLEJS2" ],
+  "dependencies": { "widadjust": "app" },
+  "storage": [
+    { "name": "widblesync.wid.js", "url": "widget.js" },
+    { "name": "widblesync.settings.js", "url": "settings.js" }
+  ],
+  "data": [
+    { "name": "widadjust.json" }
+  ]
+}
