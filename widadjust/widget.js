@@ -28,6 +28,8 @@
   let lastClockCheckTime = Date.now();
   let lastClockErrorUpdateTime;
 
+  let clockCheckTimeout;
+
   let clockError;
   let currentUpdateInterval;
   let lastPpm = null;
@@ -44,7 +46,11 @@
 
     let prevUpdateInterval = currentUpdateInterval;
     currentUpdateInterval = settings.updateInterval;
-    setTimeout(clockCheck, lastClockCheckTime + currentUpdateInterval - Date.now());
+
+    if (clockCheckTimeout !== undefined) {
+      clearTimeout(clockCheckTimeout);
+    }
+    clockCheckTimeout = setTimeout(clockCheck, lastClockCheckTime + currentUpdateInterval - Date.now());
 
     // If elapsed time differs a lot from expected,
     // some other app probably used setTime to change clock significantly.
@@ -209,6 +215,18 @@
       let ppm = (lastPpm !== null) ? lastPpm : settings.advanced ? 0 : settings.ppm;
       let updatedClockError = clockError + (now - lastClockErrorUpdateTime) * ppm / 1000000;
       return now - updatedClockError;
+    },
+    setClockError: newClockError => {
+      let now = Date.now();
+      debug(
+        new Date(now).toISOString() + ' SET CLOCK ERROR ' +
+        clockError.toFixed(2) + ' -> ' + newClockError.toFixed(2)
+      );
+      clockError = newClockError;
+      currentUpdateInterval = 0;
+      lastClockCheckTime = now;
+      lastClockErrorUpdateTime = now;
+      clockCheck();
     },
     width: WIDTH,
   };

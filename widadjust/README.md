@@ -50,7 +50,10 @@ Widget shows clock error in milliseconds and PPM.
 
 ## Services
 
-Other apps/widgets can use `WIDGETS.adjust.now()` to request current adjusted time.
+### `now`
+
+`WIDGETS.adjust.now()` returns adjusted `Date.now()`.
+
 To support also case where this widget isn't present, the following code can be used:
 
 ```
@@ -58,6 +61,10 @@ function adjustedNow() {
   return WIDGETS.adjust ? WIDGETS.adjust.now() : Date.now();
 }
 ```
+
+### `setClockError`
+
+`WIDGETS.adjust.setClockError(x)` sets clock error to given value, in milliseconds.
 
 ## Acknowledgment
 
