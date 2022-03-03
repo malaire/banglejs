@@ -68,12 +68,16 @@
     } else {
       // UPDATE CLOCK ERROR WITH TEMPERATURE COMPENSATION
 
-      Bangle.getPressure().then(d => {
-        let temp = d.temperature;
-        updateClockError(settings.ppm0 + settings.ppm1 * temp + settings.ppm2 * temp * temp);
-      }).catch(e => {
+      try {
+        Bangle.getPressure().then(d => {
+          let temp = d.temperature;
+          updateClockError(settings.ppmA * temp * temp + settings.ppmB * temp + settings.ppmC);
+        }).catch(e => {
+          WIDGETS.adjust.draw();
+        });
+      } catch (e) {
         WIDGETS.adjust.draw();
-      });
+      }
     }
   }
 
@@ -101,9 +105,9 @@
       saveState: true,
       debugLog: false,
       ppm: 0,
-      ppm0: 0,
-      ppm1: 0,
-      ppm2: 0,
+      ppmA: 0,
+      ppmB: 0,
+      ppmC: 0,
       adjustThreshold: DEFAULT_ADJUST_THRESHOLD,
       updateInterval: DEFAULT_UPDATE_INTERVAL,
     }, require('Storage').readJSON(SETTINGS_FILE, true) || {});
@@ -121,8 +125,7 @@
 
   function onQuit() {
     let now = Date.now();
-    // WIP
-    let ppm = (lastPpm !== null) ? lastPpm : settings.ppm;
+    let ppm = (lastPpm !== null) ? lastPpm : settings.advanced ? 0 : settings.ppm;
     let updatedClockError = clockError + (now - lastClockErrorUpdateTime) * ppm / 1000000;
     let save = false;
 
@@ -203,8 +206,7 @@
     draw: draw,
     now: () => {
       let now = Date.now();
-      // WIP
-      let ppm = (lastPpm !== null) ? lastPpm : settings.ppm;
+      let ppm = (lastPpm !== null) ? lastPpm : settings.advanced ? 0 : settings.ppm;
       let updatedClockError = clockError + (now - lastClockErrorUpdateTime) * ppm / 1000000;
       return now - updatedClockError;
     },

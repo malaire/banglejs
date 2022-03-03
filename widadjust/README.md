@@ -2,22 +2,25 @@
 
 Adjusts clock continually in the background to counter clock drift.
 
-## Usage
+## Basic usage
 
 First you need to determine the clock drift of your watch in PPM (parts per million).
 
 For example if you measure that your watch clock is too fast by 5 seconds in 24 hours,
 then PPM is `5 / (24*60*60) * 1000000 = 57.9`.
 
-Then set PPM in settings and this widget will continually adjust the clock by that amount.
+Then set fixed PPM in settings to that value
+and this widget will continually adjust the clock by that amount.
+
+Make sure that `Mode` is set to `Basic`. (Configuring Advanced mode is not documented.)
 
 ## Settings
 
 See **Basic logic** below for more details.
 
-- **PPM x 10** - change PPM in steps of 10
-- **PPM x 1** - change PPM in steps of 1
-- **PPM x 0.1** - change PPM in steps of 0.1
+- **PPM x 10** - change fixed PPM in steps of 10
+- **PPM x 1** - change fixed PPM in steps of 1
+- **PPM x 0.1** - change fixed PPM in steps of 0.1
 - **Update Interval** - How often to update widget and clock error.
 - **Threshold** - Threshold for adjusting clock.
   When clock error exceeds this threshold, clock is adjusted with `setTime`.
@@ -27,6 +30,11 @@ See **Basic logic** below for more details.
   for example when going to Launcher. This can cause significant inaccuracy especially
   with large **Update Interval** or **Threshold**.
 - **Debug Log** - If `On` some debug information is logged to file `widadjust.log`.
+- **Mode**
+    - `Basic`: Use fixed PPM configured in main menu.
+    - `Advanced`: Use temperature-dependent PPM configured in submenu.
+- **Advanced PPM** - Configure values `A`, `B` and `C` for temperature-dependent PPM
+  which is calculated as `At^2 + Bt + C` where `t` is temperature in Celsius.
 
 ## Display
 

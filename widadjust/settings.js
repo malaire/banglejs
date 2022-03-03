@@ -16,6 +16,9 @@
     saveState: true,
     debugLog: false,
     ppm: 0,
+    ppmA: 0,
+    ppmB: 0,
+    ppmC: 0,
     adjustThreshold: DEFAULT_ADJUST_THRESHOLD,
     updateInterval: DEFAULT_UPDATE_INTERVAL,
   }, require('Storage').readJSON(SETTINGS_FILE, true) || {});
@@ -42,17 +45,6 @@
       require('Storage').writeJSON(SETTINGS_FILE, settings);
       back();
     },
-
-    /*
-    // NOT FULLY WORKING YET
-    'Mode': {
-      value: settings.advanced,
-      format: v => v ? 'Advanced' : 'Basic',
-      onchange: () => {
-        settings.advanced = !settings.advanced;
-      }
-    },
-    */
 
     'PPM x 10' : {
       value: settings.ppm,
@@ -113,6 +105,105 @@
       onchange: () => {
         settings.debugLog = !settings.debugLog;
       },
+    },
+
+    'Mode': {
+      value: settings.advanced,
+      format: v => v ? 'Advanced' : 'Basic',
+      onchange: () => {
+        settings.advanced = !settings.advanced;
+      }
+    },
+
+    'Advanced PPM': () => { E.showMenu(advancedMenu) },
+  };
+
+  function onPpmAChange(v) {
+    settings.ppmA = v;
+    advancedMenu['A 0.01'  ].value = v;
+    advancedMenu['A 0.001' ].value = v;
+    advancedMenu['A 0.0001'].value = v;
+  }
+
+  function onPpmBChange(v) {
+    settings.ppmB = v;
+    advancedMenu['B 1'   ].value = v;
+    advancedMenu['B 0.1' ].value = v;
+    advancedMenu['B 0.01'].value = v;
+  }
+
+  function onPpmCChange(v) {
+    settings.ppmC = v;
+    advancedMenu['C 10' ].value = v;
+    advancedMenu['C 1'  ].value = v;
+    advancedMenu['C 0.1'].value = v;
+  }
+
+  let advancedMenu = {
+    '': { 'title' : 'Advanced PPM' },
+    '< Back' : () => { E.showMenu(mainMenu); },
+
+    'A 0.01' : {
+      value: settings.ppmA,
+      format: v => v.toFixed(4),
+      step: 0.01,
+      onchange : onPpmAChange,
+    },
+
+    'A 0.001' : {
+      value: settings.ppmA,
+      format: v => v.toFixed(4),
+      step: 0.001,
+      onchange : onPpmAChange,
+    },
+
+    'A 0.0001' : {
+      value: settings.ppmA,
+      format: v => v.toFixed(4),
+      step: 0.0001,
+      onchange : onPpmAChange,
+    },
+
+    'B 1' : {
+      value: settings.ppmB,
+      format: v => v.toFixed(2),
+      step: 1,
+      onchange : onPpmBChange,
+    },
+
+    'B 0.1' : {
+      value: settings.ppmB,
+      format: v => v.toFixed(2),
+      step: 0.1,
+      onchange : onPpmBChange,
+    },
+
+    'B 0.01' : {
+      value: settings.ppmB,
+      format: v => v.toFixed(2),
+      step: 0.01,
+      onchange : onPpmBChange,
+    },
+
+    'C 10' : {
+      value: settings.ppmC,
+      format: v => v.toFixed(1),
+      step: 10,
+      onchange : onPpmCChange,
+    },
+
+    'C 1' : {
+      value: settings.ppmC,
+      format: v => v.toFixed(1),
+      step: 1,
+      onchange : onPpmCChange,
+    },
+
+    'C 0.1' : {
+      value: settings.ppmC,
+      format: v => v.toFixed(1),
+      step: 0.1,
+      onchange : onPpmCChange,
     },
   };
 
