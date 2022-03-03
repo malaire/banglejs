@@ -239,6 +239,7 @@
     }
   }
 
+  currentUpdateInterval = 0;
   clockCheck();
 
   E.on('kill', onQuit);
