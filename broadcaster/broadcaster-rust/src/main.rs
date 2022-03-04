@@ -10,7 +10,6 @@ use bluer::{
     adv::{Advertisement, Type},
     Result, Session, Uuid,
 };
-use rand::Rng;
 
 // ======================================================================
 // CONST
@@ -56,7 +55,6 @@ async fn main() -> Result<()> {
         }
     });
 
-    let mut rng = rand::thread_rng();
     let mut reference = now_micros();
 
     while !got_ctrl_c.load(Ordering::SeqCst) {
@@ -85,7 +83,7 @@ async fn main() -> Result<()> {
         while reference < now {
             reference += 1_000_000;
         }
-        let delay = reference - now + rng.gen_range(0..=10_000);
+        let delay = reference - now + fastrand::u64(0..=10_000);
 
         tokio::time::sleep(Duration::from_micros(delay)).await;
     }
