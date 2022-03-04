@@ -1,0 +1,12 @@
+[Unit]
+Description=Bluetooth LE current time broadcaster
+After=multi-user.target
+
+[Service]
+ExecStart=/usr/local/bin/ble-current-time-broadcaster
+Restart=always
+RestartSec=10s
+KillSignal=SIGINT
+
+[Install]
+WantedBy=multi-user.target

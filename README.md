@@ -8,10 +8,12 @@ before being added to [official app loader].
 ## Widgets
 
 - **widadjust** - Adjusts clock continually in the background to counter clock drift.
-- **widblesync** - Syncs clock via Bluetooth LE, requires [my broadcaster].
+- **widblesync** - Syncs clock via Bluetooth LE, requires my broadcaster (see below).
+
+## Other
+
+- **broadcaster** - Bluetooth LE current time broadcaster for `widblesync` widget.
 
 
 [my app loader]: https://www.markuslaire.com/BangleApps/
 [official app loader]: https://banglejs.com/apps/
-
-[my broadcaster]: https://github.com/malaire/ble-current-time-broadcast
