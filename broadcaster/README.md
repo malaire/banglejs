@@ -6,8 +6,10 @@ Bluetooth LE current time broadcaster for `widblesync` widget.
 
 - `broadcaster-rust`
     - Broadcaster written in Rust. Linux only.
+- `broadcaster.sh`
+    - Broadcaster written in Bash. Linux only.
 
-## Installing as service
+## Installing `broadcaster-rust` as service
 
 This has been tested in Debian 11.
 
