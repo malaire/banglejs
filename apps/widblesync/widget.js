@@ -126,5 +126,5 @@
   };
 
   beginScanSequence();
-  setInterval(beginScanSequence, SCAN_SEQUENCE_INTERVAL);
+  setInterval(beginScanSequence, settings.scanInterval);
 })()
