@@ -1,7 +1,10 @@
 # BLE Clock Sync
 
-Syncs clock via Bluetooth LE, requires
-[my broadcaster](https://github.com/malaire/banglejs/tree/main/broadcaster).
+Syncs clock via Bluetooth LE.
+
+This widget receives current time from [my broadcaster]
+and reports clock error to `widadjust` widget
+which then adjusts clock according to its settings.
 
 ## Settings
 
@@ -18,3 +21,5 @@ Text is shown in red if latest clock sync failed.
 Main repository for this widget is [malaire/banglejs](https://github.com/malaire/banglejs).
 
 Please report any issues or feature requests there.
+
+[my broadcaster]: https://github.com/malaire/banglejs/tree/main/broadcaster
