@@ -28,8 +28,6 @@
 
   let settings;
 
-  let clockError = 0;
-
   // Clock delta count/max/sum of current/previous scan sequence.
   let deltaCount;
   let deltaMax;
@@ -97,7 +95,7 @@
       deltaSum += delta;
 
       if (deltaCount == SCAN_COUNT) {
-        clockError = (deltaSum - deltaMax) / (deltaCount - 1);
+        let clockError = (deltaSum - deltaMax) / (deltaCount - 1);
         latestSuccessTime = now;
         latestFailed = false;
         WIDGETS.adjust.setClockError(clockError);
