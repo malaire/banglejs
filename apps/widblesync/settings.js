@@ -9,7 +9,8 @@
 
   let settings = Object.assign({
     scanInterval: DEFAULT_SCAN_INTERVAL,
-    scanCount: 10,
+    scanCountMin: 10,
+    scanCountMax: 10,
     debugLog: 0,
   }, require('Storage').readJSON(SETTINGS_FILE, true) || {});
 
@@ -35,12 +36,25 @@
       },
     },
 
-    'Scan Count': {
-      value: E.clip(0|settings.scanCount, 1, 10),
+    'Scan Count Min': {
+      value: E.clip(0|settings.scanCountMin, 1, 10),
       min: 1,
       max: 10,
       onchange: v => {
-        settings.scanCount = v;
+        settings.scanCountMin = v;
+        mainMenu['Scan Count Max'].value =
+          Math.max(mainMenu['Scan Count Max'].value, v);
+      },
+    },
+
+    'Scan Count Max': {
+      value: E.clip(0|settings.scanCountMax, 1, 10),
+      min: 1,
+      max: 10,
+      onchange: v => {
+        settings.scanCountMax = v;
+        mainMenu['Scan Count Min'].value =
+          Math.min(mainMenu['Scan Count Min'].value, v);
       },
     },
 

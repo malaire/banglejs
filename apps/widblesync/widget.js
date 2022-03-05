@@ -91,29 +91,37 @@
       deltaCount++;
       deltaSum += delta;
 
-      if (deltaCount == settings.scanCount) {
-        let clockError = (deltaCount == 1) ? deltaSum : (deltaSum - deltaMax) / (deltaCount - 1);
-        latestSuccessTime = now;
-        latestFailed = false;
-        let oldClockError = WIDGETS.adjust.setClockError(clockError);
-        WIDGETS.blesync.draw();
-        debug(
-          new Date(now).toISOString() + ' CLOCK ERROR ' +
-          oldClockError.toFixed(2) + ' - ' +
-          (oldClockError - clockError).toFixed(2) + ' = ' +
-          clockError.toFixed(2)
-        );
+      if (deltaCount == settings.scanCountMax) {
+        finishScanSequence(now)
       } else {
         setTimeout(scan, 900);
       }
     }).catch(() => {
-      latestFailed = true;
-      WIDGETS.blesync.draw();
-      debug(
-        new Date().toISOString() + ' FAILED (' +
-        deltaCount + '/' + settings.scanCount + ')'
-      );
+      if (deltaCount >= settings.scanCountMin) {
+        finishScanSequence(Date.now());
+      } else {
+        latestFailed = true;
+        WIDGETS.blesync.draw();
+        debug(
+          new Date().toISOString() + ' FAIL (' +
+          deltaCount + '/' + settings.scanCountMin + ')'
+        );
+      }
     });
+  }
+
+  function finishScanSequence(now) {
+    let clockError = (deltaCount == 1) ? deltaSum : (deltaSum - deltaMax) / (deltaCount - 1);
+    latestSuccessTime = now;
+    latestFailed = false;
+    let oldClockError = WIDGETS.adjust.setClockError(clockError);
+    WIDGETS.blesync.draw();
+    debug(
+      new Date(now).toISOString() + ' OK   (' + deltaCount + ') ' +
+      oldClockError.toFixed(2) + ' - ' +
+      (oldClockError - clockError).toFixed(2) + ' = ' +
+      clockError.toFixed(2)
+    );
   }
 
   function getReceivedTime(device) {
@@ -134,12 +142,14 @@
   function loadSettings() {
     settings = Object.assign({
       scanInterval: DEFAULT_SCAN_INTERVAL,
-      scanCount: 10,
+      scanCountMin: 10,
+      scanCountMax: 10,
       debugLog: 0,
     }, require('Storage').readJSON(SETTINGS_FILE, true) || {});
 
     settings.scanInterval = Math.max(settings.scanInterval, MIN_SCAN_INTERVAL);
-    settings.scanCount = Math.max(settings.scanCount, 1);
+    settings.scanCountMin = Math.max(settings.scanCountMin, 1);
+    settings.scanCountMax = Math.max(settings.scanCountMin, settings.scanCountMax);
   }
 
   // ======================================================================

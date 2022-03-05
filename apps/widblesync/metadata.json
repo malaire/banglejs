@@ -1,7 +1,7 @@
 {
   "id": "widblesync",
   "name": "BLE Clock Sync",
-  "version": "0.00.018",
+  "version": "0.00.019",
   "description": "Syncs clock via Bluetooth LE, requires [my broadcaster](https://github.com/malaire/banglejs/tree/main/broadcaster).",
   "type": "widget",
   "tags": "widget",
