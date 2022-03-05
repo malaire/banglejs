@@ -6,6 +6,7 @@
   "type": "widget",
   "tags": "widget",
   "supports": [ "BANGLEJS2" ],
+  "readme": "README.md",
   "dependencies": { "widadjust": "app" },
   "storage": [
     { "name": "widblesync.wid.js", "url": "widget.js" },
