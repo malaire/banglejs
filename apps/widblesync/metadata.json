@@ -5,7 +5,7 @@
   "description": "Syncs clock via Bluetooth LE, requires [my broadcaster](https://github.com/malaire/banglejs/tree/main/broadcaster).",
   "type": "widget",
   "tags": "widget",
-  "supports": [ "BANGLEJS2" ],
+  "supports": [ "BANGLEJS", "BANGLEJS2" ],
   "readme": "README.md",
   "dependencies": { "widadjust": "app" },
   "storage": [
