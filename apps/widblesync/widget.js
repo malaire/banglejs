@@ -81,12 +81,7 @@
         clockError = (deltaSum - deltaMax) / (deltaCount - 1);
         latestSuccessTime = now;
         latestFailed = false;
-        if (WIDGETS.adjust) {
-          WIDGETS.adjust.setClockError(clockError);
-        } else if (Math.abs(clockError) >= SET_TIME_THRESHOLD) {
-          setTime((Date.now() - clockError) / 1000);
-          clockError = 0;
-        }
+        WIDGETS.adjust.setClockError(clockError);
         WIDGETS.blesync.draw();
       } else {
         setTimeout(scan, 900);
