@@ -2,7 +2,11 @@
   // ======================================================================
   // CONST
 
-  const SETTINGS_FILE = 'widblesync.json';
+  const DEBUG_LOG_FILE = 'widblesync.log';
+  const SETTINGS_FILE  = 'widblesync.json';
+
+  const BIT_DEBUG_LOG_CONSOLE = 1;
+  const BIT_DEBUG_LOG_FILE    = 2;
 
   // Interval between scan sequences, in milliseconds.
   const DEFAULT_SCAN_INTERVAL = 600000;
@@ -34,8 +38,23 @@
   let latestSuccessTime = null;
   let latestFailed = false;
 
+  let debugLogFile = null;
+
   // ======================================================================
   // FUNCTIONS
+
+  function debug(line) {
+    if (settings.debugLog & BIT_DEBUG_LOG_CONSOLE) {
+      console.log(line);
+    }
+
+    if (settings.debugLog & BIT_DEBUG_LOG_FILE) {
+      if (debugLogFile === null) {
+        debugLogFile = require('Storage').open(DEBUG_LOG_FILE, 'a');
+      }
+      debugLogFile.write(line + '\n');
+    }
+  }
 
   function draw() {
     g.reset().setFont('4x6').setFontAlign(0, 0, 3);
@@ -83,12 +102,20 @@
         latestFailed = false;
         WIDGETS.adjust.setClockError(clockError);
         WIDGETS.blesync.draw();
+        debug(
+          new Date(now).toISOString() + ' CLOCK ERROR ' +
+          clockError.toFixed(2) + ' ms'
+        );
       } else {
         setTimeout(scan, 900);
       }
     }).catch(() => {
       latestFailed = true;
       WIDGETS.blesync.draw();
+      debug(
+        new Date().toISOString() + ' FAILED (' +
+        deltaCount + '/' + SCAN_COUNT + ')'
+      );
     });
   }
 
@@ -110,6 +137,7 @@
   function loadSettings() {
     settings = Object.assign({
       scanInterval: DEFAULT_SCAN_INTERVAL,
+      debugLog: 0,
     }, require('Storage').readJSON(SETTINGS_FILE, true) || {});
 
     settings.scanInterval = Math.max(settings.scanInterval, MIN_SCAN_INTERVAL);

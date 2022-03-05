@@ -9,6 +9,12 @@ which then adjusts clock according to its settings.
 ## Settings
 
 - **Scan Interval** - How often to scan for Bluetooth LE broadcast.
+- **Debug Log** - Where to log debug messages.
+    - `Off`: No debug logging.
+    - `Console`: Log to console.
+    - `File`: Log to file `widblesync.log`.
+      This file is not deleted if widget is removed.
+    - `Both`: Log to console and file.
 
 ## Display
 
