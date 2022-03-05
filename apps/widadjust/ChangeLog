@@ -1,5 +1,5 @@
 0.02
-- add advanced mode
+- add `Advanced` and `Disabled` modes
 - add `setClockError` service
 - add more `Debug Log` settings and change default to `Off`
 

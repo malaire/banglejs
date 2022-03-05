@@ -9,6 +9,10 @@
   const BIT_DEBUG_LOG_CONSOLE = 1;
   const BIT_DEBUG_LOG_FILE    = 2;
 
+  const MODE_DISABLED = 0;
+  const MODE_BASIC    = 1;
+  const MODE_ADVANCED = 2;
+
   const DEFAULT_ADJUST_THRESHOLD = 100;
   const DEFAULT_UPDATE_INTERVAL  = 60 * 1000;
   const MIN_INTERVAL             = 10 * 1000;
@@ -29,11 +33,11 @@
   let saved;
 
   let lastClockCheckTime = Date.now();
-  let lastClockErrorUpdateTime;
+  let lastClockErrorUpdateTime = Date.now();
 
   let clockCheckTimeout;
 
-  let clockError;
+  let clockError = 0;
   let currentUpdateInterval;
   let lastPpm = null;
 
@@ -70,7 +74,7 @@
       );
       WIDGETS.adjust.draw();
 
-    } else if (!settings.advanced) {
+    } else if (settings.mode == MODE_BASIC) {
       // UPDATE CLOCK ERROR WITHOUT TEMPERATURE COMPENSATION
 
       updateClockError(settings.ppm);
@@ -106,7 +110,12 @@
   function draw() {
     g.reset().setFont('6x8').setFontAlign(0, 0);
     g.clearRect(this.x, this.y, this.x + WIDTH - 1, this.y + 23);
-    g.drawString(Math.round(clockError), this.x + WIDTH/2, this.y + 9);
+
+    if (settings.mode == MODE_DISABLED) {
+      g.drawString('-', this.x + WIDTH/2, this.y + 9);
+    } else {
+      g.drawString(Math.round(clockError), this.x + WIDTH/2, this.y + 9);
+    }
 
     if (lastPpm !== null) {
       g.setFont('4x6').setFontAlign(0, 1);
@@ -116,7 +125,7 @@
 
   function loadSettings() {
     settings = Object.assign({
-      advanced: false,
+      mode: MODE_BASIC,
       saveState: true,
       debugLog: 0,
       ppm: 0,
@@ -139,7 +148,7 @@
 
   function onQuit() {
     let now = Date.now();
-    let ppm = (lastPpm !== null) ? lastPpm : settings.advanced ? 0 : settings.ppm;
+    let ppm = (lastPpm !== null) ? lastPpm : (settings.mode == MODE_BASIC) ? settings.ppm : 0;
     let updatedClockError = clockError + (now - lastClockErrorUpdateTime) * ppm / 1000000;
     let save = false;
 
@@ -220,54 +229,56 @@
     draw: draw,
     now: () => {
       let now = Date.now();
-      let ppm = (lastPpm !== null) ? lastPpm : settings.advanced ? 0 : settings.ppm;
+      let ppm = (lastPpm !== null) ? lastPpm : (settings.mode == MODE_BASIC) ? settings.ppm : 0;
       let updatedClockError = clockError + (now - lastClockErrorUpdateTime) * ppm / 1000000;
       return now - updatedClockError;
     },
     setClockError: newClockError => {
-      let now = Date.now();
-      debug(
-        new Date(now).toISOString() + ' SET CLOCK ERROR ' +
-        clockError.toFixed(2) + ' -> ' + newClockError.toFixed(2)
-      );
-      clockError = newClockError;
-      currentUpdateInterval = 0;
-      lastClockCheckTime = now;
-      lastClockErrorUpdateTime = now;
-      clockCheck();
+      if (settings.mode != MODE_DISABLED) {
+        let now = Date.now();
+        debug(
+          new Date(now).toISOString() + ' SET CLOCK ERROR ' +
+          clockError.toFixed(2) + ' -> ' + newClockError.toFixed(2)
+        );
+        clockError = newClockError;
+        currentUpdateInterval = 0;
+        lastClockCheckTime = now;
+        lastClockErrorUpdateTime = now;
+        clockCheck();
+      }
     },
     width: WIDTH,
   };
 
-  if (settings.saveState) {
-    saved = require('Storage').readJSON(STATE_FILE, true);
-  }
-
-  let now = Date.now();
-  lastClockErrorUpdateTime = now;
-  if (saved === undefined) {
-    clockError = 0;
-    debug(new Date().toISOString() + ' START');
-  } else {
-    clockError = saved.clockError + (now - saved.time) * saved.ppm / 1000000;
-
-    if (Math.abs(clockError) <= MAX_CLOCK_ERROR_FROM_SAVED_STATE) {
-      debug(
-        new Date().toISOString() + ' START & LOAD STATE (' +
-        clockError.toFixed(2) + ')'
-      );
-    } else {
-      debug(
-        new Date().toISOString() + ' START & IGNORE STATE (' +
-        clockError.toFixed(2) + ')'
-      );
-      clockError = 0;
+  if (settings.mode != MODE_DISABLED) {
+    if (settings.saveState) {
+      saved = require('Storage').readJSON(STATE_FILE, true);
     }
+
+    let now = Date.now();
+    lastClockErrorUpdateTime = now;
+    if (saved === undefined) {
+      debug(new Date().toISOString() + ' START');
+    } else {
+      clockError = saved.clockError + (now - saved.time) * saved.ppm / 1000000;
+
+      if (Math.abs(clockError) <= MAX_CLOCK_ERROR_FROM_SAVED_STATE) {
+        debug(
+          new Date().toISOString() + ' START & LOAD STATE (' +
+          clockError.toFixed(2) + ')'
+        );
+      } else {
+        debug(
+          new Date().toISOString() + ' START & IGNORE STATE (' +
+          clockError.toFixed(2) + ')'
+        );
+        clockError = 0;
+      }
+    }
+
+    currentUpdateInterval = 0;
+    clockCheck();
+
+    E.on('kill', onQuit);
   }
-
-  currentUpdateInterval = 0;
-  clockCheck();
-
-  E.on('kill', onQuit);
-
 })()

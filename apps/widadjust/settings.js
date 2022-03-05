@@ -2,6 +2,8 @@
   const SETTINGS_FILE = 'widadjust.json';
   const STATE_FILE = 'widadjust.state';
 
+  let modeN = [ "Disabled", "Basic", "Advanced" ];
+
   const BIT_DEBUG_LOG_CONSOLE = 1;
   const BIT_DEBUG_LOG_FILE    = 2;
   let debugLogN = [ "Off", "Console", "File", "Both" ];
@@ -16,7 +18,8 @@
   let stateFileErased = false;
 
   let settings = Object.assign({
-    advanced: false,
+    // 0: Disabled, 1: Basic, 2: Advanced
+    mode: 1,
     saveState: true,
     debugLog: 0,
     ppm: 0,
@@ -121,10 +124,12 @@
     },
 
     'Mode': {
-      value: settings.advanced,
-      format: v => v ? 'Advanced' : 'Basic',
-      onchange: () => {
-        settings.advanced = !settings.advanced;
+      value: E.clip(0|settings.mode, 0, 2),
+      min: 0,
+      max: 2,
+      format: v => modeN[v],
+      onchange: v => {
+        settings.mode = v;
       }
     },
 

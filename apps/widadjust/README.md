@@ -36,6 +36,7 @@ See **Basic logic** below for more details.
       This file is not deleted if widget is removed.
     - `Both`: Log to console and file.
 - **Mode**
+    - `Disabled`: Widget is disabled and doesn't adjust clock.
     - `Basic`: Use fixed PPM configured in main menu.
     - `Advanced`: Use temperature-dependent PPM configured in submenu.
 - **Advanced PPM** - Configure values `A`, `B` and `C` for temperature-dependent PPM
