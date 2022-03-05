@@ -7,6 +7,12 @@ Syncs clock via Bluetooth LE, requires
 
 - **Scan Interval** - How often to scan for Bluetooth LE broadcast.
 
+## Display
+
+Widget shows the last time clock sync succeeded or `--:--` if never.
+
+Text is shown in red if latest clock sync failed.
+
 ## GitHub
 
 Main repository for this widget is [malaire/banglejs](https://github.com/malaire/banglejs).

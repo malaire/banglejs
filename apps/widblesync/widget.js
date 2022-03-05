@@ -17,7 +17,7 @@
   const SERVICE_UUID = '56A9BAE4-DE7E-490B-AEE3-C87326C10C66';
 
   // Widget width.
-  const WIDTH = 16;
+  const WIDTH = 10;
 
   // ======================================================================
   // VARIABLES
@@ -31,23 +31,28 @@
   let deltaMax;
   let deltaSum;
 
-  let failCount = null;
+  let latestSuccessTime = null;
+  let latestFailed = false;
 
   // ======================================================================
   // FUNCTIONS
 
   function draw() {
-    g.reset().setFont('6x8').setFontAlign(0, 0);
+    g.reset().setFont('4x6').setFontAlign(0, 0, 3);
     g.clearRect(this.x, this.y, this.x + WIDTH - 1, this.y + 23);
 
-    if (failCount === null) {
-      g.drawString('-', this.x + WIDTH/2, this.y + 12);
-    } else if (failCount === 0) {
-      g.setColor('#00F');
-      g.drawString('OK', this.x + WIDTH/2, this.y + 12);
+    if (latestFailed) {
+      g.setColor(1, 0, 0);
+    }
+
+    if (latestSuccessTime == null) {
+      g.drawString('--:--', this.x + WIDTH/2, this.y + 12);
     } else {
-      g.setColor('#F00');
-      g.drawString(failCount, this.x + WIDTH/2, this.y + 12);
+      let d = new Date(latestSuccessTime);
+      let h = d.getHours();
+      let m = d.getMinutes();
+      let hhmm = ("0"+h).substr(-2) + ":" + ("0"+m).substr(-2);
+      g.drawString(hhmm, this.x + WIDTH/2, this.y + 12);
     }
   }
 
@@ -74,7 +79,8 @@
 
       if (deltaCount == SCAN_COUNT) {
         clockError = (deltaSum - deltaMax) / (deltaCount - 1);
-        failCount = 0;
+        latestSuccessTime = now;
+        latestFailed = false;
         if (WIDGETS.adjust) {
           WIDGETS.adjust.setClockError(clockError);
         } else if (Math.abs(clockError) >= SET_TIME_THRESHOLD) {
@@ -86,7 +92,7 @@
         setTimeout(scan, 900);
       }
     }).catch(() => {
-      failCount++;
+      latestFailed = true;
       WIDGETS.blesync.draw();
     });
   }
