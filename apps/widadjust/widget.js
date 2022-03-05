@@ -236,15 +236,18 @@
     setClockError: newClockError => {
       if (settings.mode != MODE_DISABLED) {
         let now = Date.now();
-        debug(
-          new Date(now).toISOString() + ' SET CLOCK ERROR ' +
-          clockError.toFixed(2) + ' -> ' + newClockError.toFixed(2)
-        );
+        let ppm = (lastPpm !== null) ? lastPpm : (settings.mode == MODE_BASIC) ? settings.ppm : 0;
+        let updatedClockError = clockError + (now - lastClockErrorUpdateTime) * ppm / 1000000;
         clockError = newClockError;
         currentUpdateInterval = 0;
         lastClockCheckTime = now;
         lastClockErrorUpdateTime = now;
+        debug(
+          new Date(now).toISOString() + ' SET CLOCK ERROR ' +
+          clockError.toFixed(2) + ' -> ' + newClockError.toFixed(2)
+        );
         clockCheck();
+        return updatedClockError;
       }
     },
     width: WIDTH,

@@ -70,7 +70,8 @@ function adjustedNow() {
 
 ### `setClockError`
 
-`WIDGETS.adjust.setClockError(x)` sets clock error to given value, in milliseconds.
+`WIDGETS.adjust.setClockError(x)` sets clock error to given value, in milliseconds
+and returns the old clock error or `undefined` if widget is disabled.
 
 ## GitHub
 
