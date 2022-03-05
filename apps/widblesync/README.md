@@ -9,6 +9,10 @@ which then adjusts clock according to its settings.
 ## Settings
 
 - **Scan Interval** - How often to scan for Bluetooth LE broadcast.
+- **Scan Count** - When scanning for Bluetooth LE broadcast,
+  how many results are needed for scan to be successful.
+  With smaller values scanning succeeds more often, especially with Bangle.js 1,
+  but larger values offer more accuracy as result is average of all values.
 - **Debug Log** - Where to log debug messages.
     - `Off`: No debug logging.
     - `Console`: Log to console.

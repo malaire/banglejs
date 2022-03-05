@@ -15,9 +15,6 @@
   // How long to scan for time broadcast, in milliseconds.
   const SCAN_TIMEOUT = 3 * 1000;
 
-  // Number of successful scans in scan sequence.
-  const SCAN_COUNT = 10;
-
   const SERVICE_UUID = '56A9BAE4-DE7E-490B-AEE3-C87326C10C66';
 
   // Widget width.
@@ -94,8 +91,8 @@
       deltaCount++;
       deltaSum += delta;
 
-      if (deltaCount == SCAN_COUNT) {
-        let clockError = (deltaSum - deltaMax) / (deltaCount - 1);
+      if (deltaCount == settings.scanCount) {
+        let clockError = (deltaCount == 1) ? deltaSum : (deltaSum - deltaMax) / (deltaCount - 1);
         latestSuccessTime = now;
         latestFailed = false;
         let oldClockError = WIDGETS.adjust.setClockError(clockError);
@@ -114,7 +111,7 @@
       WIDGETS.blesync.draw();
       debug(
         new Date().toISOString() + ' FAILED (' +
-        deltaCount + '/' + SCAN_COUNT + ')'
+        deltaCount + '/' + settings.scanCount + ')'
       );
     });
   }
@@ -137,10 +134,12 @@
   function loadSettings() {
     settings = Object.assign({
       scanInterval: DEFAULT_SCAN_INTERVAL,
+      scanCount: 10,
       debugLog: 0,
     }, require('Storage').readJSON(SETTINGS_FILE, true) || {});
 
     settings.scanInterval = Math.max(settings.scanInterval, MIN_SCAN_INTERVAL);
+    settings.scanCount = Math.max(settings.scanCount, 1);
   }
 
   // ======================================================================

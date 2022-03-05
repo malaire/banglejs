@@ -9,6 +9,7 @@
 
   let settings = Object.assign({
     scanInterval: DEFAULT_SCAN_INTERVAL,
+    scanCount: 10,
     debugLog: 0,
   }, require('Storage').readJSON(SETTINGS_FILE, true) || {});
 
@@ -31,6 +32,15 @@
       format: v => intervalN[v],
       onchange: v => {
         settings.scanInterval = intervalV[v];
+      },
+    },
+
+    'Scan Count': {
+      value: E.clip(0|settings.scanCount, 1, 10),
+      min: 1,
+      max: 10,
+      onchange: v => {
+        settings.scanCount = v;
       },
     },
 
