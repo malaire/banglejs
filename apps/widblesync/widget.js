@@ -98,11 +98,13 @@
         let clockError = (deltaSum - deltaMax) / (deltaCount - 1);
         latestSuccessTime = now;
         latestFailed = false;
-        WIDGETS.adjust.setClockError(clockError);
+        let oldClockError = WIDGETS.adjust.setClockError(clockError);
         WIDGETS.blesync.draw();
         debug(
           new Date(now).toISOString() + ' CLOCK ERROR ' +
-          clockError.toFixed(2) + ' ms'
+          oldClockError.toFixed(2) + ' - ' +
+          (oldClockError - clockError).toFixed(2) + ' = ' +
+          clockError.toFixed(2)
         );
       } else {
         setTimeout(scan, 900);
