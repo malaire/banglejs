@@ -72,6 +72,12 @@ function adjustedNow() {
 
 `WIDGETS.adjust.setClockError(x)` sets clock error to given value, in milliseconds.
 
+## GitHub
+
+Main repository for this widget is [malaire/banglejs](https://github.com/malaire/banglejs).
+
+Please report any issues or feature requests there.
+
 ## Acknowledgment
 
 Uses [Clock Settings](https://icons8.com/icon/tQvI71EfIWy3/clock-settings)
