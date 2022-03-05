@@ -6,6 +6,9 @@
   const SETTINGS_FILE  = 'widadjust.json';
   const STATE_FILE     = 'widadjust.state';
 
+  const BIT_DEBUG_LOG_CONSOLE = 1;
+  const BIT_DEBUG_LOG_FILE    = 2;
+
   const DEFAULT_ADJUST_THRESHOLD = 100;
   const DEFAULT_UPDATE_INTERVAL  = 60 * 1000;
   const MIN_INTERVAL             = 10 * 1000;
@@ -88,8 +91,14 @@
   }
 
   function debug(line) {
-    console.log(line);
-    if (debugLogFile !== null) {
+    if (settings.debugLog & BIT_DEBUG_LOG_CONSOLE) {
+      console.log(line);
+    }
+
+    if (settings.debugLog & BIT_DEBUG_LOG_FILE) {
+      if (debugLogFile === null) {
+        debugLogFile = require('Storage').open(DEBUG_LOG_FILE, 'a');
+      }
       debugLogFile.write(line + '\n');
     }
   }
@@ -109,7 +118,7 @@
     settings = Object.assign({
       advanced: false,
       saveState: true,
-      debugLog: false,
+      debugLog: 0,
       ppm: 0,
       ppmA: 0,
       ppmB: 0,
@@ -118,12 +127,11 @@
       updateInterval: DEFAULT_UPDATE_INTERVAL,
     }, require('Storage').readJSON(SETTINGS_FILE, true) || {});
 
-    if (settings.debugLog) {
-      if (debugLogFile === null) {
-        debugLogFile = require('Storage').open(DEBUG_LOG_FILE, 'a');
-      }
-    } else {
-      debugLogFile = null;
+    // convert from boolean used in v0.01
+    if (settings.debugLog === false) {
+      settings.debugLog = BIT_DEBUG_LOG_CONSOLE;
+    } else if (settings.debugLog === true) {
+      settings.debugLog = BIT_DEBUG_LOG_CONSOLE | BIT_DEBUG_LOG_FILE;
     }
 
     settings.updateInterval = Math.max(settings.updateInterval, MIN_INTERVAL);

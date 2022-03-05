@@ -2,6 +2,10 @@
   const SETTINGS_FILE = 'widadjust.json';
   const STATE_FILE = 'widadjust.state';
 
+  const BIT_DEBUG_LOG_CONSOLE = 1;
+  const BIT_DEBUG_LOG_FILE    = 2;
+  let debugLogN = [ "Off", "Console", "File", "Both" ];
+
   const DEFAULT_ADJUST_THRESHOLD = 100;
   let thresholdV = [ 10, 25, 50, 100, 250, 500, 1000 ];
 
@@ -14,7 +18,7 @@
   let settings = Object.assign({
     advanced: false,
     saveState: true,
-    debugLog: false,
+    debugLog: 0,
     ppm: 0,
     ppmA: 0,
     ppmB: 0,
@@ -22,6 +26,13 @@
     adjustThreshold: DEFAULT_ADJUST_THRESHOLD,
     updateInterval: DEFAULT_UPDATE_INTERVAL,
   }, require('Storage').readJSON(SETTINGS_FILE, true) || {});
+
+  // convert from boolean used in v0.01
+  if (settings.debugLog === false) {
+    settings.debugLog = BIT_DEBUG_LOG_CONSOLE;
+  } else if (settings.debugLog === true) {
+    settings.debugLog = BIT_DEBUG_LOG_CONSOLE | BIT_DEBUG_LOG_FILE;
+  }
 
   if (thresholdV.indexOf(settings.adjustThreshold) == -1) {
     settings.adjustThreshold = DEFAULT_ADJUST_THRESHOLD;
@@ -100,10 +111,12 @@
     },
 
     'Debug Log': {
-      value: settings.debugLog,
-      format: v => v ? 'On' : 'Off',
-      onchange: () => {
-        settings.debugLog = !settings.debugLog;
+      value: E.clip(0|settings.debugLog, 0, 3),
+      min: 0,
+      max: 3,
+      format: v => debugLogN[v],
+      onchange: v => {
+        settings.debugLog = v;
       },
     },
 

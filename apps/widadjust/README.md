@@ -29,7 +29,12 @@ See **Basic logic** below for more details.
   If `Off` clock error state is forgotten and reset to 0 whenever widget is restarted,
   for example when going to Launcher. This can cause significant inaccuracy especially
   with large **Update Interval** or **Threshold**.
-- **Debug Log** - If `On` some debug information is logged to file `widadjust.log`.
+- **Debug Log** - Where to log debug messages.
+    - `Off`: No debug logging.
+    - `Console`: Log to console.
+    - `File`: Log to file `widadjust.log`.
+      This file is not deleted if widget is removed.
+    - `Both`: Log to console and file.
 - **Mode**
     - `Basic`: Use fixed PPM configured in main menu.
     - `Advanced`: Use temperature-dependent PPM configured in submenu.
